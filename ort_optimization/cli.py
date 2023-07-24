@@ -1,19 +1,23 @@
 """Console script for ort_optimization."""
-import argparse
-import sys
+import click
+
+from ort_optimization.ort_optimization import ort
 
 
-def main():
-    """Console script for ort_optimization."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument('_', nargs='*')
-    args = parser.parse_args()
+@click.command()
+@click.option('--count', default=1, help='number of greetings')
+@click.argument('names')
+def main(count, names):
+    """Options, Arguments and call main.
 
-    print("Arguments: " + str(args._))
-    print("Replace this message by putting your code into "
-          "ort_optimization.cli.main")
-    return 0
+    Args:
+        count: Name of the downloaded files.
+        names: List of bands to manage.
 
-
-if __name__ == "__main__":
-    sys.exit(main())  # pragma: no cover
+    Returns:
+        A dictionary with the bands data.
+    """
+    for _ in range(count):
+        click.echo(f'Hello {names}!')
+        print('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW')
+    return ort()
