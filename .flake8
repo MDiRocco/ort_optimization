@@ -1,3 +1,0 @@
-[flake8]
-ignore = W293, WPS421
-max-line-length = 150

@@ -1,7 +1,7 @@
 """Console script for ort_optimization."""
 import click
 
-from ort_optimization.ort_optimization import ort
+from ort_optimization.ort_optimization import bis, ort
 
 
 @click.command()
@@ -19,5 +19,5 @@ def main(count, names):
     """
     for _ in range(count):
         click.echo(f'Hello {names}!')
-        print('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW')
+        bis()
     return ort()
