@@ -14,7 +14,6 @@ class VRP(object):
         Args:
             path_input: Path for the input files.
         """
-        print('INIT')
         self.path_input = path_input
         self.input_data = {}
         self.create_data_model()
@@ -41,7 +40,6 @@ class VRP(object):
         """
         print(f'Objective: {solution.ObjectiveValue()}')
         max_route_distance = 0
-        print(self.input_data)
         for vehicle_id in range(self.input_data['num_vehicles']):
             index = routing.Start(vehicle_id)
             plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)

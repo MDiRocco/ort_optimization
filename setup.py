@@ -20,8 +20,8 @@ def get_requiremenst(path: Path) -> list[str]:
     return libraries
 
 
-# requirements = get_requiremenst(Path(__file__).parent.resolve() / 'requirements' / 'requirements.txt')
-requirements = []
+requirements = get_requiremenst(Path(__file__).parent.resolve() / 'requirements' / 'requirements.txt')
+
 test_requirements = []
 
 setup(
