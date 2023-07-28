@@ -2,6 +2,6 @@
 
 import sys
 
-from ort_optimization.cli import cli
+from ort_optimization.cli import main
 
-sys.exit(cli())  # pragma: no cover
+sys.exit(main())  # pragma: no cover

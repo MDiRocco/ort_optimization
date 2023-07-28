@@ -1,16 +1,19 @@
 """Console script for ort_optimization."""
+import sys
+
 import click
 
 from ort_optimization.tsp import TSP
 
 
 @click.group()
-def cli():
+@click.version_option()
+def main():
     """Entrypoint for cli."""
     pass  # noqa: WPS420
 
 
-@cli.command()
+@main.command()
 # @click.option('--count', default=1, help='number of greetings')
 @click.argument('file_path')
 def tsp(file_path):
