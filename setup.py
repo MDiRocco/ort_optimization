@@ -2,6 +2,8 @@
 
 """The setup script."""
 
+from pathlib import Path
+
 from setuptools import find_packages, setup
 
 with open('README.rst') as readme_file:
@@ -10,8 +12,16 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = []
 
+def get_requiremenst(path: Path) -> list[str]:
+    with path.open() as requirements_txt:
+        lines = list(requirements_txt)
+        libraries = [line.strip() for line in lines]
+    return libraries
+
+
+# requirements = get_requiremenst(Path(__file__).parent.resolve() / 'requirements' / 'requirements.txt')
+requirements = []
 test_requirements = []
 
 setup(

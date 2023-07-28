@@ -1,20 +1,20 @@
-"""Traveling Salesperson Problem."""
-
+"""Simple Vehicles Routing Problem (VRP)."""
 import json
 import sys
 
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 
-class TSP(object):
-    """Class for Traveling Salesperson Problem."""
+class VRP(object):
+    """Class for Vehicles Routing Problem."""
 
     def __init__(self, path_input):
-        """Init data for TSP.
+        """Init data for VRP.
 
         Args:
             path_input: Path for the input files.
         """
+        print('INIT')
         self.path_input = path_input
         self.input_data = {}
         self.create_data_model()
@@ -39,18 +39,25 @@ class TSP(object):
             routing: Routing Model
             solution: Solves the current routing model with the given parameters
         """
-        print('Objective: {0} miles'.format(solution.ObjectiveValue()))
-        index = routing.Start(0)
-        plan_output = 'Route for vehicle 0:\n'
-        route_distance = 0
-        while not routing.IsEnd(index):
-            plan_output += ' {0} ->'.format(manager.IndexToNode(index))
-            previous_index = index
-            index = solution.Value(routing.NextVar(index))
-            route_distance += routing.GetArcCostForVehicle(previous_index, index, 0)
-        plan_output += ' {0}\n'.format(manager.IndexToNode(index))
-        print(plan_output)
-        plan_output += 'Route distance: {0}miles\n'.format(route_distance)
+        print(f'Objective: {solution.ObjectiveValue()}')
+        max_route_distance = 0
+        print(self.input_data)
+        for vehicle_id in range(self.input_data['num_vehicles']):
+            index = routing.Start(vehicle_id)
+            plan_output = 'Route for vehicle {0}:\n'.format(vehicle_id)
+            route_distance = 0
+            while not routing.IsEnd(index):
+                plan_output += ' {0} -> '.format(manager.IndexToNode(index))
+                previous_index = index
+                index = solution.Value(routing.NextVar(index))
+                route_distance += routing.GetArcCostForVehicle(
+                    previous_index, index, vehicle_id,
+                )
+            plan_output += '{0}\n'.format(manager.IndexToNode(index))
+            plan_output += 'Distance of the route: {0}m\n'.format(route_distance)
+            print(plan_output)
+            max_route_distance = max(route_distance, max_route_distance)
+        print('Maximum of the route distances: {0}m'.format(max_route_distance))
 
     @classmethod
     def solve(cls, path):
@@ -60,21 +67,21 @@ class TSP(object):
             path: Path for the input files.
 
         """
-        tsp_object = cls(path)
-        # print(classe.input_data.keys())
+        vrp_object = cls(path)
 
         # Create the routing index manager.
         manager = pywrapcp.RoutingIndexManager(
-            len(tsp_object.input_data['distance_matrix']),
-            tsp_object.input_data['num_vehicles'],
-            tsp_object.input_data['depot'],
+            len(vrp_object.input_data['distance_matrix']),
+            vrp_object.input_data['num_vehicles'],
+            vrp_object.input_data['depot'],
         )
 
         # Create Routing Model.
         routing = pywrapcp.RoutingModel(manager)
 
+        # Create and register a transit callback.
         def distance_callback(from_index, to_index):
-            """Convert from routing variable Index to distance matrix NodeIndex.
+            """Return the distance between the two nodes.
 
             Args:
                 from_index: start node
@@ -83,14 +90,27 @@ class TSP(object):
             Returns:
                 Returns the distance between the two nodes.
             """
+            # Convert from routing variable Index to distance matrix NodeIndex.
             from_node = manager.IndexToNode(from_index)
             to_node = manager.IndexToNode(to_index)
-            return tsp_object.input_data['distance_matrix'][from_node][to_node]
+            return vrp_object.input_data['distance_matrix'][from_node][to_node]
 
         transit_callback_index = routing.RegisterTransitCallback(distance_callback)
 
         # Define cost of each arc.
         routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+
+        # Add Distance constraint.
+        dimension_name = 'Distance'
+        routing.AddDimension(
+            transit_callback_index,
+            0,  # no slack
+            3000,  # vehicle maximum travel distance
+            True,  # start cumul to zero
+            dimension_name,
+        )
+        distance_dimension = routing.GetDimensionOrDie(dimension_name)
+        distance_dimension.SetGlobalSpanCostCoefficient(100)
 
         # Setting first solution heuristic.
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
@@ -103,4 +123,6 @@ class TSP(object):
 
         # Print solution on console.
         if solution:
-            cls.print_solution(tsp_object, manager, routing, solution)
+            cls.print_solution(vrp_object, manager, routing, solution)
+        else:
+            print('No solution found !')
