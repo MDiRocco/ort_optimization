@@ -1,6 +1,7 @@
 """Console script for ort_optimization."""
 import click
 
+from ort_optimization.cvrp import CVRP
 from ort_optimization.tsp import TSP
 from ort_optimization.vrp import VRP
 
@@ -39,3 +40,16 @@ def vrp(file_path):
         Routes for the vehicles.
     """
     return VRP.solve(file_path)
+
+@main.command()
+@click.argument('file_path')
+def cvrp(file_path):
+    """Solve the Vehicles Routing Problem (VRP).
+
+    Args:
+        file_path: Path to the data input.
+
+    Returns:
+        Routes for the vehicles.
+    """
+    return CVRP.solve(file_path)

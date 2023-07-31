@@ -103,4 +103,4 @@ class TSP(object):
 
         # Print solution on console.
         if solution:
-            cls.print_solution(tsp_object, manager, routing, solution)
+            tsp_object.print_solution(manager, routing, solution)
