@@ -77,7 +77,7 @@ class VRP(object):
 
         # Create and register a transit callback.
         def distance_callback(from_index, to_index):
-            """Return the distance between the two nodes.
+            """Convert from routing variable Index to distance matrix NodeIndex.
 
             Args:
                 from_index: start node
@@ -86,7 +86,6 @@ class VRP(object):
             Returns:
                 Returns the distance between the two nodes.
             """
-            # Convert from routing variable Index to distance matrix NodeIndex.
             from_node = manager.IndexToNode(from_index)
             to_node = manager.IndexToNode(to_index)
             return vrp_object.input_data['distance_matrix'][from_node][to_node]
@@ -101,7 +100,7 @@ class VRP(object):
         routing.AddDimension(
             transit_callback_index,
             0,  # no slack
-            3000,  # vehicle maximum travel distance # noqa: WPS432
+            vrp_object.input_data['travel distance'],  # vehicle maximum travel distance
             True,  # start cumul to zero # noqa: WPS425
             dimension_name,
         )
