@@ -27,7 +27,6 @@ class VRP(object):
             print('JSON VALIDATION FAILED')
             print(er)
             sys.exit(1)
-        print(self.input_data)
 
     def print_solution(self, manager, routing, solution):
         """Print solution on console.
