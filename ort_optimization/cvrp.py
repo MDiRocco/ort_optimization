@@ -132,6 +132,7 @@ class CVRP(object):
         search_parameters.first_solution_strategy = (
             routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
         )
+
         search_parameters.local_search_metaheuristic = (
             routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
         )
@@ -139,7 +140,8 @@ class CVRP(object):
 
         # Solve the problem.
         solution = routing.SolveWithParameters(search_parameters)
-
         # Print solution on console.
         if solution:
             cvrp_object.print_solution(manager, routing, solution)
+        else:
+            print('No Solution')
